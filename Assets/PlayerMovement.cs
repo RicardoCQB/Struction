@@ -11,14 +11,26 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 8;
     public float playerJumpForce = 10;
 
+    [Space]
+    [Header("Collisions")]
+    public float groundOffset = 0.05f;
+
     private bool isGrounded;
     private bool jumpRequest;
+
+    public LayerMask playerMask;
+
+    private Vector2 playerSize;
+    private Vector2 groundedBoxSize;
 
     // Start is called before the first frame update
     void Start()
     {
         // Gets the components of the player Game Object        
         rb = GetComponent<Rigidbody2D>();
+
+        playerSize = GetComponent<BoxCollider2D>().size;
+        groundedBoxSize = new Vector2(playerSize.x, groundOffset);
     }
 
     // Update is called once per frame
@@ -31,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
         Walk(dir);
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             jumpRequest = true;
         }
@@ -43,6 +55,12 @@ public class PlayerMovement : MonoBehaviour
         {            
             GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpForce, ForceMode2D.Impulse);
             jumpRequest = false;
+            isGrounded = false;
+        }
+        else
+        {
+            Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + groundedBoxSize.y) * 0.5f;
+            isGrounded = Physics2D.OverlapBox(boxCenter, groundedBoxSize, 0f, playerMask) != null;
         }
     }
 
