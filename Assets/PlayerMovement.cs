@@ -8,8 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Space]
     [Header("Player Stats")]
-    public float speed = 10;
-    [Range(1, 10)]
+    public float speed = 8;
     public float playerJumpForce = 10;
 
     private bool isGrounded;

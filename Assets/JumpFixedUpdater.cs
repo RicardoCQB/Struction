@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class JumpFixedUpdater : MonoBehaviour
 {
-    public float fallMultiplier = 2.5f;
-    public float lowFallMultiplier = 2f;
+    public float fallMultiplier = 8f;
+    public float lowFallMultiplier = 6f;
 
     private Rigidbody2D rb;
 
