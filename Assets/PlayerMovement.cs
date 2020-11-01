@@ -9,9 +9,11 @@ public class PlayerMovement : MonoBehaviour
     [Space]
     [Header("Player Stats")]
     public float speed = 10;
-    public float playerJumpForce = 50;
+    [Range(1, 10)]
+    public float playerJumpForce = 10;
 
     private bool isGrounded;
+    private bool jumpRequest;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +32,19 @@ public class PlayerMovement : MonoBehaviour
 
         Walk(dir);
 
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpRequest = true;
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (jumpRequest)
+        {            
+            GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpForce, ForceMode2D.Impulse);
+            jumpRequest = false;
+        }
     }
 
     private void Walk(Vector2 dir)
@@ -40,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump(Vector2 dir)
     {
-
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.velocity += dir * playerJumpForce;
     }
 }
