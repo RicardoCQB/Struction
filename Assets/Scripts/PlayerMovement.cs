@@ -16,13 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float playerJumpForce = 10;
     public float hangTime = .5f; // Time for the player to jump after he leaves a platform.
 
-    private float hangCounter;
-
-    [Space]
-    [Header("Collisions")]
-    public float groundOffset = 0.05f;
-    
-    
+    private float hangCounter;    
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Jumps if the button is pressed and it has solid ground (hangTime is positive) under the player
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if(Input.GetButtonDown("Jump") && hangCounter > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
         }
