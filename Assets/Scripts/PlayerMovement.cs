@@ -14,9 +14,11 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Stats")]
     public float speed = 8;
     public float playerJumpForce = 10;
-    public float hangTime = .5f; // Time for the player to jump after he leaves a platform.
+    public float hangTime = .2f; // Time for the player to jump after he leaves a platform.
+    public float jumpBufferLength = 0.5f;
 
-    private float hangCounter;    
+    private float hangCounter;
+    private float jumpBufferCount;
 
     // Start is called before the first frame update
     void Start()
@@ -45,10 +47,22 @@ public class PlayerMovement : MonoBehaviour
             hangCounter -= Time.deltaTime;
         }
 
+        // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
+        // and that jump will still be registered.
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpBufferCount = jumpBufferLength;
+        }
+        else
+        {
+            jumpBufferCount -= Time.deltaTime;
+        }
+
         // Jumps if the button is pressed and it has solid ground (hangTime is positive) under the player
-        if(Input.GetButtonDown("Jump") && hangCounter > 0f)
+        if (jumpBufferCount >=0 && hangCounter > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
+            jumpBufferCount = 0;
         }
 
         // If the Jump button is up then it slows the player vertical velocity

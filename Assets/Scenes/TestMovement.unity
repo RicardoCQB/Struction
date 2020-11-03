@@ -385,6 +385,7 @@ MonoBehaviour:
   speed: 6
   playerJumpForce: 10
   hangTime: 0.2
+  jumpBufferLength: 0.3
 --- !u!61 &864481427
 BoxCollider2D:
   m_ObjectHideFlags: 0
