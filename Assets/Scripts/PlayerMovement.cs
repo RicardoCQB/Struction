@@ -6,6 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
     public SpriteRenderer playerSprite;
+    public Animator playerAnimator;
+    public ParticleSystem footstepDust;
+    public ParticleSystem.EmissionModule footstepDustEmission;
 
     public Transform groundCheckPoint, groundCheckPoint2;
     public LayerMask whatIsGround;
@@ -30,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     {
         // Gets the components of the player Game Object        
         rb = GetComponent<Rigidbody2D>();
+
+        footstepDustEmission = footstepDust.emission;
     }
 
     // Update is called once per frame
