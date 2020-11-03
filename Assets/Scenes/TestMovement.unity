@@ -378,11 +378,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 864481429}
+  playerSprite: {fileID: 864481428}
   groundCheckPoint: {fileID: 1777617083}
   groundCheckPoint2: {fileID: 762999956}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 256
+  camTarget: {fileID: 1986045260}
+  camAheadAmount: 1
+  camAheadSpeed: 1
   speed: 6
   playerJumpForce: 10
   hangTime: 0.2

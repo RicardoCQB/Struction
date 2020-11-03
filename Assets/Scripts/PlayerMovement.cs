@@ -5,10 +5,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
+    public SpriteRenderer playerSprite;
 
     public Transform groundCheckPoint, groundCheckPoint2;
     public LayerMask whatIsGround;
     private bool isGrounded;
+
+    public Transform camTarget;
+    public float camAheadAmount, camAheadSpeed; // The camera moves ahead of the player by this amount when he moves.
+
 
     [Space]
     [Header("Player Stats")]
@@ -29,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {    
+    {
         // Lets the player move horizontally
         rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rb.velocity.y);
 
@@ -39,27 +44,19 @@ public class PlayerMovement : MonoBehaviour
 
         // If the player is grounded it has to jump in the next hangTime seconds
         if (isGrounded)
-        {
             hangCounter = hangTime;
-        }
         else
-        {
             hangCounter -= Time.deltaTime;
-        }
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
         if (Input.GetButtonDown("Jump"))
-        {
             jumpBufferCount = jumpBufferLength;
-        }
         else
-        {
             jumpBufferCount -= Time.deltaTime;
-        }
 
         // Jumps if the button is pressed and it has solid ground (hangTime is positive) under the player
-        if (jumpBufferCount >=0 && hangCounter > 0f)
+        if (jumpBufferCount >= 0 && hangCounter > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
             jumpBufferCount = 0;
@@ -67,10 +64,22 @@ public class PlayerMovement : MonoBehaviour
 
         // If the Jump button is up then it slows the player vertical velocity
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
-        {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+
+        //Flip the player sprite
+        if (Input.GetAxisRaw("Horizontal") >= 0)
+            playerSprite.flipX = false;
+        else
+            playerSprite.flipX = true;
+
+        // Move camera
+        if (Input.GetAxisRaw("Horizontal") != 0)
+        {
+            camTarget.localPosition = new Vector3(
+                Mathf.Lerp(camTarget.localPosition.x, camAheadAmount * Input.GetAxisRaw("Horizontal"), camAheadSpeed * Time.deltaTime)
+                , camTarget.localPosition.y, camTarget.localPosition.z);
         }
     }
-
-
 }
+
+    
