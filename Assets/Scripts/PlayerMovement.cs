@@ -38,43 +38,19 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
+    {    
+        // Lets the player move horizontally
+        rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rb.velocity.y);
 
-        Vector2 dir = new Vector2(x, y);
+        // Check if the player is on the ground / platform
+        Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + groundedBoxSize.y) * 0.5f;
+        isGrounded = Physics2D.OverlapBox(boxCenter, groundedBoxSize, 0f, playerMask) != null;
 
-        Walk(dir);     
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if(Input.GetButtonDown("Jump") && isGrounded)
         {
-            jumpRequest = true;
+            rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (jumpRequest)
-        {            
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * playerJumpForce, ForceMode2D.Impulse);
-            jumpRequest = false;
-            isGrounded = false;
-        }
-        else
-        {
-            Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + groundedBoxSize.y) * 0.5f;
-            isGrounded = Physics2D.OverlapBox(boxCenter, groundedBoxSize, 0f, playerMask) != null;
-        }        
-    }
 
-    private void Walk(Vector2 dir)
-    {
-        rb.velocity = new Vector2(dir.x * speed, rb.velocity.y);
-    }
-
-    private void Jump(Vector2 dir)
-    {
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.velocity += dir * playerJumpForce;
-    }
 }
