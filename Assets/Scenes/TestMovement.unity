@@ -347,7 +347,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 864481429}
   speed: 8
-  playerJumpForce: 10
+  playerJumpForce: 7
+  hangTime: 0
   groundOffset: 0.05
   playerMask:
     serializedVersion: 2

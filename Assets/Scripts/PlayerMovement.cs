@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Stats")]
     public float speed = 8;
     public float playerJumpForce = 10;
+    public float hangTime = 0.2f; // Time for the player to jump after he leaves a platform.
 
     [Space]
     [Header("Collisions")]
@@ -22,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 playerSize;
     private Vector2 groundedBoxSize;
+    
+    private float hangCounter;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector2 dir = new Vector2(x, y);
 
-        Walk(dir);
+        Walk(dir);     
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
@@ -61,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + groundedBoxSize.y) * 0.5f;
             isGrounded = Physics2D.OverlapBox(boxCenter, groundedBoxSize, 0f, playerMask) != null;
-        }
+        }        
     }
 
     private void Walk(Vector2 dir)
