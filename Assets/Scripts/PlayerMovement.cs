@@ -6,34 +6,29 @@ public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody2D rb;
 
+    public Transform groundCheckPoint, groundCheckPoint2;
+    public LayerMask whatIsGround;
+    private bool isGrounded;
+
     [Space]
     [Header("Player Stats")]
     public float speed = 8;
     public float playerJumpForce = 10;
-    public float hangTime = 0.2f; // Time for the player to jump after he leaves a platform.
+    public float hangTime = .5f; // Time for the player to jump after he leaves a platform.
+
+    private float hangCounter;
 
     [Space]
     [Header("Collisions")]
     public float groundOffset = 0.05f;
-
-    private bool isGrounded;
-    private bool jumpRequest;
-
-    public LayerMask playerMask;
-
-    private Vector2 playerSize;
-    private Vector2 groundedBoxSize;
     
-    private float hangCounter;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         // Gets the components of the player Game Object        
         rb = GetComponent<Rigidbody2D>();
-
-        playerSize = GetComponent<BoxCollider2D>().size;
-        groundedBoxSize = new Vector2(playerSize.x, groundOffset);
     }
 
     // Update is called once per frame
@@ -42,11 +37,21 @@ public class PlayerMovement : MonoBehaviour
         // Lets the player move horizontally
         rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rb.velocity.y);
 
-        // Check if the player is on the ground / platform
-        Vector2 boxCenter = (Vector2)transform.position + Vector2.down * (playerSize.y + groundedBoxSize.y) * 0.5f;
-        isGrounded = Physics2D.OverlapBox(boxCenter, groundedBoxSize, 0f, playerMask) != null;
+        // Check if the player is on the ground / platform        
+        isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, .1f, whatIsGround)
+            || Physics2D.OverlapCircle(groundCheckPoint2.position, .1f, whatIsGround);
 
-        // Jumps if the button is pressed and it has solid ground under the player
+        // If the player is grounded it has to jump in the next hangTime seconds
+        if (isGrounded)
+        {
+            hangCounter = hangTime;
+        }
+        else
+        {
+            hangCounter -= Time.deltaTime;
+        }
+
+        // Jumps if the button is pressed and it has solid ground (hangTime is positive) under the player
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
