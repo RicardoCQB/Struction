@@ -378,6 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 864481429}
   groundCheckPoint: {fileID: 1777617083}
+  groundCheckPoint2: {fileID: 762999956}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 256
