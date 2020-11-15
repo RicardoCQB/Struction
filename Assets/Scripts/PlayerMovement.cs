@@ -57,11 +57,11 @@ public class PlayerMovement : MonoBehaviour
         isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .1f, whatIsWall);
 
         // If the player is on the wall and presses the Grab it grabs the wall
-        if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.C))
+        if ((isOnLeftWall || isOnRightWall) && Input.GetKeyDown(KeyCode.C))
             wallGrab = true;
 
         // If the player is not on a wall or is not pressing the Grab button it doesn't grab a wall
-        if (!isOnLeftWall || !isOnRightWall || Input.GetKey(KeyCode.C))
+        if ((!isOnLeftWall && !isOnRightWall)|| Input.GetKeyUp(KeyCode.C))
             wallGrab = false;
 
         if (wallGrab)
@@ -72,12 +72,6 @@ public class PlayerMovement : MonoBehaviour
             hangCounter = hangTime;
         else
             hangCounter -= Time.deltaTime;
-
-        // If the player is on the wall and pressing a button it grabs the wall
-        if (isOnLeftWall || isOnRightWall)
-        {
-
-        }
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
