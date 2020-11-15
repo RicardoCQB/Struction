@@ -11,8 +11,13 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem.EmissionModule footstepDustEmission;
 
     public Transform groundCheckPoint, groundCheckPoint2;
+    public Transform leftWallCheckPoint, rightWallCheckPoint;
     public LayerMask whatIsGround;
+    public LayerMask whatIsWall;
     private bool isGrounded;
+    private bool isOnRightWall;
+    private bool isOnLeftWall;
+    private bool wallGrab;
 
     public Transform camTarget;
     public float camAheadAmount, camAheadSpeed; // The camera moves ahead of the player by this amount when he moves.
@@ -47,11 +52,32 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, .1f, whatIsGround)
             || Physics2D.OverlapCircle(groundCheckPoint2.position, .1f, whatIsGround);
 
+        // Check if the player is on the wall  
+        isOnLeftWall = Physics2D.OverlapCircle(leftWallCheckPoint.position, .1f, whatIsWall);
+        isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .1f, whatIsWall);
+
+        // If the player is on the wall and presses the Grab it grabs the wall
+        if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.C))
+            wallGrab = true;
+
+        // If the player is not on a wall or is not pressing the Grab button it doesn't grab a wall
+        if (!isOnLeftWall || !isOnRightWall || Input.GetKey(KeyCode.C))
+            wallGrab = false;
+
+        if (wallGrab)
+            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * speed);
+
         // If the player is grounded it has to jump in the next hangTime seconds
         if (isGrounded)
             hangCounter = hangTime;
         else
             hangCounter -= Time.deltaTime;
+
+        // If the player is on the wall and pressing a button it grabs the wall
+        if (isOnLeftWall || isOnRightWall)
+        {
+
+        }
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
