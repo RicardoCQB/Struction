@@ -46,10 +46,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        float xRaw = Input.GetAxisRaw("Horizontal");
+        float yRaw = Input.GetAxisRaw("Vertical");
 
         // Lets the player move horizontally
-        rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rb.velocity.y);
+        rb.velocity = new Vector2(xRaw * speed, rb.velocity.y);
 
         // Check if the player is on the ground / platform        
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, .1f, whatIsGround)
@@ -68,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
             wallGrab = false;
 
         if (wallGrab)
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * (speed / 2));
+            rb.velocity = new Vector2(rb.velocity.x, yRaw * (speed / 2));
 
         // If the player is grounded it has to jump in the next hangTime seconds
         if (isGrounded)
@@ -101,24 +102,26 @@ public class PlayerMovement : MonoBehaviour
         // If the player hasn't dashed and presses the dash button, then the player dashes
         if (Input.GetKey(KeyCode.X) && !hasDashed)
         {
-            hasDashed = true;
-            rb.velocity = Vector2.zero;
-            rb.velocity += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * 30;
-
-            StartCoroutine(DashWait());
+            if (xRaw != 0 || yRaw != 0)
+            {
+                hasDashed = true;
+                rb.velocity = Vector2.zero;
+                rb.velocity += new Vector2(xRaw, yRaw).normalized * 30;
+                StartCoroutine(DashWait());
+            }
         }        
 
         //Flip the player sprite
-        if (Input.GetAxis("Horizontal") >= 0)
+        if (xRaw >= 0)
             playerSprite.flipX = false;
         else
             playerSprite.flipX = true;
 
         // Move camera
-        if (Input.GetAxisRaw("Horizontal") != 0)
+        if (xRaw != 0)
         {
             camTarget.localPosition = new Vector3(
-                Mathf.Lerp(camTarget.localPosition.x, camAheadAmount * Input.GetAxisRaw("Horizontal"), camAheadSpeed * Time.deltaTime)
+                Mathf.Lerp(camTarget.localPosition.x, camAheadAmount * xRaw, camAheadSpeed * Time.deltaTime)
                 , camTarget.localPosition.y, camTarget.localPosition.z);
         }
     }
