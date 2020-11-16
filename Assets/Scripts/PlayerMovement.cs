@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isOnRightWall;
     private bool isOnLeftWall;
     private bool wallGrab;
+    private bool hasDashed = false;
 
     public Transform camTarget;
     public float camAheadAmount, camAheadSpeed; // The camera moves ahead of the player by this amount when he moves.
@@ -45,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         // Lets the player move horizontally
         rb.velocity = new Vector2(Input.GetAxisRaw("Horizontal") * speed, rb.velocity.y);
 
@@ -61,17 +64,21 @@ public class PlayerMovement : MonoBehaviour
             wallGrab = true;
 
         // If the player is not on a wall or is not pressing the Grab button it doesn't grab a wall
-        if ((!isOnLeftWall && !isOnRightWall)|| Input.GetKeyUp(KeyCode.C))
+        if ((!isOnLeftWall && !isOnRightWall) || Input.GetKeyUp(KeyCode.C))
             wallGrab = false;
 
         if (wallGrab)
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * (speed/2));
+            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * (speed / 2));
 
         // If the player is grounded it has to jump in the next hangTime seconds
         if (isGrounded)
             hangCounter = hangTime;
         else
             hangCounter -= Time.deltaTime;
+
+        // If the player is on the ground or left the ground recently it resets the dash
+        if (hangCounter > 0f)
+            hasDashed = false;
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
@@ -91,8 +98,16 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
+        // If the player hasn't dashed and presses the dash button, then the player dashes
+        if (Input.GetKeyDown(KeyCode.X) && !hasDashed)
+        {
+            hasDashed = true;
+            rb.velocity = Vector2.zero;
+            rb.velocity += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * 30;
+        }        
+
         //Flip the player sprite
-        if (Input.GetAxisRaw("Horizontal") >= 0)
+        if (Input.GetAxis("Horizontal") >= 0)
             playerSprite.flipX = false;
         else
             playerSprite.flipX = true;
