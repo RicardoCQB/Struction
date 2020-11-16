@@ -57,8 +57,8 @@ public class PlayerMovement : MonoBehaviour
             || Physics2D.OverlapCircle(groundCheckPoint2.position, .1f, whatIsGround);
 
         // Check if the player is on the wall  
-        isOnLeftWall = Physics2D.OverlapCircle(leftWallCheckPoint.position, .1f, whatIsWall);
-        isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .1f, whatIsWall);
+        isOnLeftWall = Physics2D.OverlapCircle(leftWallCheckPoint.position, .5f, whatIsWall);
+        isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .5f, whatIsWall);
 
         // If the player is on the wall and presses the Grab it grabs the wall
         if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.C))
