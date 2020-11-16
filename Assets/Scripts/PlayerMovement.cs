@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
             hangCounter -= Time.deltaTime;
 
         // If the player is on the ground or left the ground recently it resets the dash
-        if (hangCounter > 0f)
+        if (isGrounded)
             hasDashed = false;
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
@@ -99,11 +99,13 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
         // If the player hasn't dashed and presses the dash button, then the player dashes
-        if (Input.GetKeyDown(KeyCode.X) && !hasDashed)
+        if (Input.GetKey(KeyCode.X) && !hasDashed)
         {
             hasDashed = true;
             rb.velocity = Vector2.zero;
             rb.velocity += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * 30;
+
+            StartCoroutine(DashWait());
         }        
 
         //Flip the player sprite
@@ -119,6 +121,23 @@ public class PlayerMovement : MonoBehaviour
                 Mathf.Lerp(camTarget.localPosition.x, camAheadAmount * Input.GetAxisRaw("Horizontal"), camAheadSpeed * Time.deltaTime)
                 , camTarget.localPosition.y, camTarget.localPosition.z);
         }
+    }
+    
+    IEnumerator DashWait()
+    {
+        StartCoroutine(GroundDash());
+        rb.drag = 5;
+        rb.gravityScale = 0;
+        yield return new WaitForSeconds(.3f);
+        rb.drag = 0;
+        rb.gravityScale = 3;
+    }
+
+    IEnumerator GroundDash()
+    {
+        yield return new WaitForSeconds(.15f);
+        if (isGrounded)
+            hasDashed = false;
     }
 }
 
