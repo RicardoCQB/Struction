@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator DashWait()
     {
         StartCoroutine(GroundDash());
-        rb.drag = 5;
+        rb.drag = 10;
         rb.gravityScale = 0;
         yield return new WaitForSeconds(.3f);
         rb.drag = 0;
