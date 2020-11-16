@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 379520867
+    locked: 0
+  - name: Middleground
+    uniqueID: 2481819485
+    locked: 0
+  - name: Entity
+    uniqueID: 1621143607
+    locked: 0
+  - name: Foreground
+    uniqueID: 3977795929
+    locked: 0
+  - name: Camera
+    uniqueID: 889964097
+    locked: 0

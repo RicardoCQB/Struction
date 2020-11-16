@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .1f, whatIsWall);
 
         // If the player is on the wall and presses the Grab it grabs the wall
-        if ((isOnLeftWall || isOnRightWall) && Input.GetKeyDown(KeyCode.C))
+        if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.C))
             wallGrab = true;
 
         // If the player is not on a wall or is not pressing the Grab button it doesn't grab a wall
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             wallGrab = false;
 
         if (wallGrab)
-            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * speed);
+            rb.velocity = new Vector2(rb.velocity.x, Input.GetAxisRaw("Vertical") * (speed/2));
 
         // If the player is grounded it has to jump in the next hangTime seconds
         if (isGrounded)
