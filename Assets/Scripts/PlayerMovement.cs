@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public Animator playerAnimator;
     public ParticleSystem footstepDust;
     public ParticleSystem.EmissionModule footstepDustEmission;
+    public Transform respawnPoint;
 
     public Transform groundCheckPoint, groundCheckPoint2;
     public Transform leftWallCheckPoint, rightWallCheckPoint;
@@ -62,11 +63,11 @@ public class PlayerMovement : MonoBehaviour
         isOnRightWall = Physics2D.OverlapCircle(rightWallCheckPoint.position, .5f, whatIsWall);
 
         // If the player is on the wall and presses the Grab it grabs the wall
-        if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.C))
+        if ((isOnLeftWall || isOnRightWall) && Input.GetKey(KeyCode.Z))
             wallGrab = true;
 
         // If the player is not on a wall or is not pressing the Grab button it doesn't grab a wall
-        if ((!isOnLeftWall && !isOnRightWall) || Input.GetKeyUp(KeyCode.C))
+        if ((!isOnLeftWall && !isOnRightWall) || Input.GetKeyUp(KeyCode.Z))
             wallGrab = false;
 
         if (wallGrab)
@@ -87,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.C))
             jumpBufferCount = jumpBufferLength;
         else
             jumpBufferCount -= Time.deltaTime;
@@ -101,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // If the Jump button is up then it slows the player vertical velocity
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        if (Input.GetKeyUp(KeyCode.C) && rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
 
         // If the player hasn't dashed and presses the dash button, then the player dashes
@@ -114,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity += new Vector2(xRaw, yRaw).normalized * 30;
                 StartCoroutine(DashWait());
             }
-        }        
+        }
 
         //Flip the player sprite
         if (xRaw >= 0)
@@ -129,24 +130,29 @@ public class PlayerMovement : MonoBehaviour
                 Mathf.Lerp(camTarget.localPosition.x, camAheadAmount * xRaw, camAheadSpeed * Time.deltaTime)
                 , camTarget.localPosition.y, camTarget.localPosition.z);
         }
-    }
-    
-    IEnumerator DashWait()
-    {
-        StartCoroutine(GroundDash());
-        rb.drag = 10;
-        rb.gravityScale = 0;
-        yield return new WaitForSeconds(.3f);
-        rb.drag = 0;
-        rb.gravityScale = 3;
-    }
 
-    IEnumerator GroundDash()
-    {
-        yield return new WaitForSeconds(.15f);
-        if (isGrounded)
-            hasDashed = false;
+        // If the player touches the sea, it respawns in the respawn point
+        if (rb.gameObject.CompareTag("Sea"))
+        {
+            transform.position = respawnPoint.position;
+        }
+
+        IEnumerator DashWait()
+        {
+            StartCoroutine(GroundDash());
+            rb.drag = 10;
+            rb.gravityScale = 0;
+            yield return new WaitForSeconds(.3f);
+            rb.drag = 0;
+            rb.gravityScale = 3;
+        }
+
+        IEnumerator GroundDash()
+        {
+            yield return new WaitForSeconds(.15f);
+            if (isGrounded)
+                hasDashed = false;
+        }
     }
 }
-
     
