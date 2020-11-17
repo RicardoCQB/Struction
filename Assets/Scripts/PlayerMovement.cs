@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Lets the player move horizontally
         rb.velocity = new Vector2(xRaw * speed, rb.velocity.y);
+        playerAnimator.SetFloat("Speed", Mathf.Abs(xRaw));
 
         // Check if the player is on the ground / platform        
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, .1f, whatIsGround)
