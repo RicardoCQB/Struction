@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem.EmissionModule footstepDustEmission;
     public Transform respawnPoint;
 
+    public GameObject finishGame;
+
     public Transform groundCheckPoint, groundCheckPoint2;
     public Transform leftWallCheckPoint, rightWallCheckPoint;
     public LayerMask whatIsGround;
@@ -161,9 +163,7 @@ public class PlayerMovement : MonoBehaviour
         // If the player touches the sea, it respawns in the respawn point
         if (collision.gameObject.CompareTag("Finish"))
         {
-
-            SceneManager.LoadScene("GameMenu");
-            
+            finishGame.SetActive(true);            
         }
     }
 }
