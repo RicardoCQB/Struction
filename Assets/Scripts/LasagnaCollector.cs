@@ -14,6 +14,7 @@ public class LasagnaCollector : MonoBehaviour
         if(other.transform.tag == "Lasagna")
         {
             lasagnaCounter++;
+            // add sound
             textLasagnaCounter.text = lasagnaCounter.ToString();
             Destroy(other.gameObject);
         }
