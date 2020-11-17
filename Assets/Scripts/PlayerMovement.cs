@@ -80,7 +80,10 @@ public class PlayerMovement : MonoBehaviour
 
         // If the player is on the ground or left the ground recently it resets the dash
         if (isGrounded)
+        {
             hasDashed = false;
+            playerAnimator.SetBool("isJumping", false);
+        }
 
         // Manage Jump Buffer, that means the player can press the jump button before landing in a platform
         // and that jump will still be registered.
@@ -92,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         // Jumps if the button is pressed and it has solid ground (hangTime is positive) under the player
         if (jumpBufferCount >= 0 && hangCounter > 0f)
         {
+            playerAnimator.SetBool("isJumping", true);
             rb.velocity = new Vector2(rb.velocity.x, playerJumpForce);
             jumpBufferCount = 0;
         }
