@@ -10,13 +10,8 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Level1");
     }
 
-    public void Options()
-    {
-
-    }
-
     public void Exit()
     {
-        
+        Application.Quit();
     }
 }
