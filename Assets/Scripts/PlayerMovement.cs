@@ -131,12 +131,6 @@ public class PlayerMovement : MonoBehaviour
                 , camTarget.localPosition.y, camTarget.localPosition.z);
         }
 
-        // If the player touches the sea, it respawns in the respawn point
-        if (rb.gameObject.CompareTag("Sea"))
-        {
-            transform.position = respawnPoint.position;
-        }
-
         IEnumerator DashWait()
         {
             StartCoroutine(GroundDash());
@@ -152,6 +146,15 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForSeconds(.15f);
             if (isGrounded)
                 hasDashed = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // If the player touches the sea, it respawns in the respawn point
+        if (collision.gameObject.CompareTag("Sea"))
+        {
+            transform.position = respawnPoint.position;
         }
     }
 }
