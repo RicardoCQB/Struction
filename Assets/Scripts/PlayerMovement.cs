@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -155,6 +156,14 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Sea"))
         {
             transform.position = respawnPoint.position;
+        }
+
+        // If the player touches the sea, it respawns in the respawn point
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+
+            SceneManager.LoadScene("GameMenu");
+            
         }
     }
 }
